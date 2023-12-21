@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @Slf4j
-public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     // http://localhost:8000/login
     @Override
     public Authentication attemptAuthentication(
@@ -40,7 +40,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain, Authentication authResult)
+            throws IOException, ServletException {
         log.info(">>> 인증 성공");
     }
 }
