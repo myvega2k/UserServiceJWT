@@ -40,8 +40,9 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity =
                 optionalUser.orElseThrow(() -> new UsernameNotFoundException(username + ": not found"));
 
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
-                new ArrayList<>());
+        return new User(userEntity.getEmail(),
+                        userEntity.getEncryptedPwd(),
+                        new ArrayList<>());
     }
 
     @Override

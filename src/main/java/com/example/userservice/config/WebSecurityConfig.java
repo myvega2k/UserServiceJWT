@@ -1,8 +1,11 @@
 package com.example.userservice.config;
 
 import com.example.userservice.filter.AuthenticationFilter;
+import com.example.userservice.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -10,7 +13,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+
+	private final UserService userService;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final Environment env;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
