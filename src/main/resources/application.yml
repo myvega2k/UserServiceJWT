@@ -5,10 +5,15 @@ server:
 spring:
   application:
     name: user-service
-  datasource:
-    url: jdbc:h2:mem:testdb 
-    driver-class-name: org.h2.Driver
-    username: sa
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
   jpa:
     show-sql: true
     hibernate:
@@ -43,3 +48,9 @@ greeting:
 #token:
 #  expiration_time: 86400000
 #  secret: user_token
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,beans,busrefresh

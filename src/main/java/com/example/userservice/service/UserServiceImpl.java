@@ -8,6 +8,10 @@ import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +23,7 @@ import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
@@ -31,6 +36,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     ModelMapper mapper;
+
+    @Autowired
+    Environment env;
+    @Autowired
+    RestTemplate restTemplate;
 
     @Override
     public UserDetails loadUserByUsername(String username)
@@ -72,7 +82,13 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("User not found");
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
-        List<ResponseOrder> orderList = new ArrayList<>();
+//        List<ResponseOrder> orderList = new ArrayList<>();
+        String orderUrl = String.format(env.getProperty("order_service.url"), userId);
+        ResponseEntity<List<ResponseOrder>> orderListResponse =
+                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<ResponseOrder>>() {});
+        List<ResponseOrder> orderList = orderListResponse.getBody();
+
         userDto.setOrders(orderList);
         return userDto;
     }
