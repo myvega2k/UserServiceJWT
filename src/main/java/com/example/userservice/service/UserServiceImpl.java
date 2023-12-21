@@ -2,6 +2,7 @@ package com.example.userservice.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -34,9 +35,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(username);
-        if (userEntity == null)
-            throw new UsernameNotFoundException(username + ": not found");
+        Optional<UserEntity> optionalUser = userRepository.findByEmail(username);
+        //orElseThrow(Supplier) Supplier의 추상메서드 () -> T
+        UserEntity userEntity =
+                optionalUser.orElseThrow(() -> new UsernameNotFoundException(username + ": not found"));
+
         return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
                 new ArrayList<>());
     }
